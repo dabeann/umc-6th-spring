@@ -43,14 +43,14 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
         Map<String, String> errors = new LinkedHashMap<>();
 
-        e.getBindingResult().getFieldErrors().stream()
+        e.getBindingResult().getFieldErrors()
                 .forEach(fieldError -> {
                     String fieldName = fieldError.getField();
                     String errorMessage = Optional.ofNullable(fieldError.getDefaultMessage()).orElse("");
                     errors.merge(fieldName, errorMessage, (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
                 });
 
-        return handleExceptionInternalArgs(e,HttpHeaders.EMPTY,ErrorStatus.valueOf("BAD_REQUEST"),request,errors);
+        return handleExceptionInternalArgs(e,HttpHeaders.EMPTY,ErrorStatus.valueOf("_BAD_REQUEST"),request,errors);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
