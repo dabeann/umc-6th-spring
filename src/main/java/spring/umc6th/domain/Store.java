@@ -17,10 +17,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import spring.umc6th.domain.common.BaseEntity;
 
 @Entity
 @Getter
+@DynamicInsert
+@DynamicUpdate
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -40,6 +45,7 @@ public class Store extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String address;
 
+    @ColumnDefault("0")
     @Column(nullable = false)
     private Float score;
 
