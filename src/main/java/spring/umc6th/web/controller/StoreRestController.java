@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import spring.umc6th.apiPayload.ApiResponse;
 import spring.umc6th.converter.StoreConverter;
+import spring.umc6th.domain.Mission;
 import spring.umc6th.domain.Review;
 import spring.umc6th.domain.Store;
 import spring.umc6th.service.store_service.StoreCommandService;
@@ -41,5 +42,13 @@ public class StoreRestController {
             @ExistMember @RequestParam(name = "memberId") Long memberId) {
         Review review = storeCommandService.createReview(memberId, storeId, request);
         return ApiResponse.onSuccess(StoreConverter.toCreateReviewResultDTO(review));
+    }
+
+    @PostMapping("/{storeId}/add/mission")
+    public ApiResponse<StoreResponseDTO.CreateMissionResultDTO> createMission(
+            @RequestBody @Valid StoreRequestDTO.MissionDTO request,
+            @ExistStore @PathVariable(name = "storeId") Long storeId) {
+        Mission mission = storeCommandService.createMission(storeId, request);
+        return ApiResponse.onSuccess(StoreConverter.toCreateMissionResultDTO(mission));
     }
 }
