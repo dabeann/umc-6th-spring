@@ -58,7 +58,7 @@ public class Review extends BaseEntity {
     }
 
     public void setStore(Store store){
-        if (this.score != null)
+        if (this.store != null)
             store.getReviewList().remove(this);
         this.store = store;
         store.getReviewList().add(this);
