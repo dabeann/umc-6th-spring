@@ -24,8 +24,10 @@ import spring.umc6th.domain.Review;
 import spring.umc6th.domain.Store;
 import spring.umc6th.service.store_service.StoreCommandService;
 import spring.umc6th.service.store_service.StoreQueryService;
+import spring.umc6th.validation.annotation.CheckPage;
 import spring.umc6th.validation.annotation.ExistMember;
 import spring.umc6th.validation.annotation.ExistStore;
+import spring.umc6th.validation.validator.CheckPageValidator;
 import spring.umc6th.web.dto.StoreRequestDTO;
 import spring.umc6th.web.dto.StoreResponseDTO;
 
@@ -37,6 +39,7 @@ public class StoreRestController {
 
     private final StoreCommandService storeCommandService;
     private final StoreQueryService storeQueryService;
+    private final CheckPageValidator checkPageValidator;
 
     @PostMapping("/save")
     public ApiResponse<StoreResponseDTO.CreateStoreResultDTO> createStore(
@@ -72,11 +75,13 @@ public class StoreRestController {
     })
     @Parameters({
             @Parameter(name = "storeId", description = "가게의 아이디, path variable 입니다!"),
-            @Parameter(name = "page", description = "페이지 번호, 0번이 1 페이지 입니다.")
+            @Parameter(name = "page", description = "페이지 번호, 1번이 1 페이지 입니다.")
     })
     public ApiResponse<StoreResponseDTO.ReviewPreViewListDTO> getReviewList(
-            @ExistStore @PathVariable(name = "storeId") Long storeId, @RequestParam(name = "page") Integer page) {
-        Page<Review> reviewList = storeQueryService.getReviewList(storeId, page);
+            @ExistStore @PathVariable(name = "storeId") Long storeId,
+            @CheckPage @RequestParam(name = "page") Integer page) {
+        Integer validatedPage = checkPageValidator.validateAndTransformPage(page);
+        Page<Review> reviewList = storeQueryService.getReviewList(storeId, validatedPage);
         return ApiResponse.onSuccess(StoreConverter.reviewPreViewListDTO(reviewList));
     }
 }
