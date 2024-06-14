@@ -23,6 +23,7 @@ public class MissionRestController {
 
     private final MissionCommandService missionCommandService;
 
+    // TODO member controller로 리팩토링하기
     @PostMapping("/challenge")
     public ApiResponse<MissionResponseDTO.CreateMemberMissionResultDTO> createChallengingMemberMission(
             @RequestBody @Valid @MissionInChallenging(memberIdField = "memberId", missionIdField = "missionId")
