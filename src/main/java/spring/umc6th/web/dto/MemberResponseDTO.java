@@ -66,4 +66,13 @@ public class MemberResponseDTO {
         LocalDate deadline;
         LocalDate createdAt;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberMissionResultDTO {
+        Long missionId;
+        LocalDateTime createdAt;
+    }
 }
