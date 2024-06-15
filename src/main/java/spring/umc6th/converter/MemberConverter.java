@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import spring.umc6th.domain.Member;
+import spring.umc6th.domain.Mission;
 import spring.umc6th.domain.Review;
 import spring.umc6th.domain.enums.Gender;
+import spring.umc6th.domain.mapping.MemberMission;
 import spring.umc6th.web.dto.MemberRequestDTO;
 import spring.umc6th.web.dto.MemberResponseDTO;
 import spring.umc6th.web.dto.StoreResponseDTO;
@@ -67,6 +69,30 @@ public class MemberConverter {
                 .totalElements(reviewList.getTotalElements())
                 .listSize(reviewPreViewDTOList.size())
                 .reviewList(reviewPreViewDTOList)
+                .build();
+    }
+
+    public static MemberResponseDTO.MissionPreViewDTO missionPreViewDTO(MemberMission memberMission) {
+        Mission mission = memberMission.getMission();
+        return MemberResponseDTO.MissionPreViewDTO.builder()
+                .missionSpec(mission.getMissionSpec())
+                .reward(mission.getReward())
+                .deadline(mission.getDeadline())
+                .createdAt(memberMission.getCreatedAt().toLocalDate())
+                .build();
+    }
+
+    public static MemberResponseDTO.MissionPreViewListDTO missionPreViewListDTO(Page<MemberMission> memberMissionList) {
+        List<MemberResponseDTO.MissionPreViewDTO> missionPreViewDTOList = memberMissionList.stream()
+                .map(MemberConverter::missionPreViewDTO).collect(Collectors.toList());
+
+        return MemberResponseDTO.MissionPreViewListDTO.builder()
+                .isLast(memberMissionList.isLast())
+                .isFirst(memberMissionList.isFirst())
+                .totalPage(memberMissionList.getTotalPages())
+                .totalElements(memberMissionList.getTotalElements())
+                .listSize(missionPreViewDTOList.size())
+                .missionList(missionPreViewDTOList)
                 .build();
     }
 }
