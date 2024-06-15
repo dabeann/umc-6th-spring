@@ -21,6 +21,7 @@ import spring.umc6th.apiPayload.ApiResponse;
 import spring.umc6th.converter.MemberConverter;
 import spring.umc6th.domain.Member;
 import spring.umc6th.domain.Review;
+import spring.umc6th.domain.mapping.MemberMission;
 import spring.umc6th.service.member_service.MemberCommandService;
 import spring.umc6th.service.member_service.MemberQueryService;
 import spring.umc6th.validation.annotation.CheckPage;
@@ -64,5 +65,25 @@ public class MemberRestController {
         Integer validatedPage = checkPageValidator.validateAndTransformPage(page);
         Page<Review> reviewList = memberQueryService.getReviewListByMemberId(memberId, validatedPage);
         return ApiResponse.onSuccess(MemberConverter.reviewPreViewListDTO(reviewList));
+    }
+
+    @GetMapping("{memberId}/process/missions")
+    @Operation(summary = "내가 진행중인 미션 목록 조회 API", description = "특정 유저가 진행중인 미션들의 목록을 조회하는 API이며, 페이징을 포함합니다. query String 으로 page 번호를 주세요")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH003", description = "access 토큰을 주세요!", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH004", description = "acess 토큰 만료", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH006", description = "acess 토큰 모양이 이상함", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    @Parameters({
+            @Parameter(name = "memberId", description = "유저의 아이디, path variable 입니다!"),
+            @Parameter(name = "page", description = "페이지 번호, 1번이 1 페이지 입니다.")
+    })
+    public ApiResponse<MemberResponseDTO.MissionPreViewListDTO> getMissionListByMember(
+            @ExistMember @PathVariable(name = "memberId") Long memberId,
+            @CheckPage @RequestParam(name = "page") Integer page) {
+        Integer validatedPage = checkPageValidator.validateAndTransformPage(page);
+        Page<MemberMission> missionList = memberQueryService.getMemberMissionListByMemberId(memberId, validatedPage);
+        return ApiResponse.onSuccess(MemberConverter.missionPreViewListDTO(missionList));
     }
 }
