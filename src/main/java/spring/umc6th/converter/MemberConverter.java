@@ -95,4 +95,11 @@ public class MemberConverter {
                 .missionList(missionPreViewDTOList)
                 .build();
     }
+
+    public static MemberResponseDTO.MemberMissionResultDTO toMemberMissionResultDTO(MemberMission memberMission){
+        return MemberResponseDTO.MemberMissionResultDTO.builder()
+                .missionId(memberMission.getId())
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 }
